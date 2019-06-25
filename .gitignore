@@ -33,6 +33,7 @@ Homestead.json
 .idea
 .svn
 .project
+.buildpath
 
 # Logs
 logs
