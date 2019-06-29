@@ -1,5 +1,6 @@
 <?php
-// This demo creates a new BCH address from your xPub to be used as a 1-time payment address.
+// This demo creates a new SLP address from your xPub to be used as a 1-time payment address.
+// You can use this address to receive payments in (any) SLP token.
 // It then prints the address along with a QR code containing the payiment URI.
 
 //include '../cashp.php'; // uncomment this if you are not using Composer
@@ -16,6 +17,7 @@ $xPub = "xpub6CphSGwqZvKFU9zMfC3qLxxhskBFjNAC9imbSMGXCNVD4DRynJGJCYR63DZe5T4bePE
 $requestAmountBCH = 0.002;
 $requestAmountSLP = 123.5;
 $addressCounter = 1; // increment this and store it (in database) to generate unique addresses
+$qrCodeFile = "./example-qr.png";
 
 
 // setup library
@@ -33,7 +35,8 @@ AbstractBlockchainApi::setLogger(function (string $subject, $error, $data = null
 $address = $cashp->getBlockchain()->createNewAddress($xPub, $addressCounter);
 print_r($address);
 
-print_r($cashp->generateQrCodeForAddress("./example-qr.png", $address->slpAddress, $requestAmountBCH, $requestAmountSLP));
+@unlink($qrCodeFile); // ensure it doesn't exist
+print_r($cashp->generateQrCodeForAddress($qrCodeFile, $address->slpAddress, $requestAmountBCH, $requestAmountSLP, $tokenID));
 echo '<img src="example-qr.png" alt="qr-code">' . "\n";
 
 // check the BCH address balance (inlcuding TX)

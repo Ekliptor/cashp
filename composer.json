@@ -1,0 +1,41 @@
+{
+	"name" : "ekliptor/cashp",
+	"description" : "PHP library for Bitcoin Cash (BCH) and SLP token payments",
+	"keywords" : [
+		"bitcoin",
+		"cryptocurrency",
+		"billing",
+		"ecommerce",
+		"payment"
+	],
+	"type" : "library",
+	"license" : "MIT",
+	"support" : {
+		"issues" : "https://github.com/Ekliptor/cashp/issues",
+		"source" : "https://github.com/Ekliptor/cashp"
+	},
+	"authors" : [{
+			"name" : "Ekliptor",
+			"email" : "Ekliptor1@yandex.com"
+		}
+	],
+	"require": {
+		"ekliptor/qr-code": "^1"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "^8"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Ekliptor\\CashP\\" : "src/"
+		},
+		"files" : []
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"Ekliptor\\CashP\\Tests\\" : "tests/"
+		}
+	},
+	"minimum-stability" : "stable",
+	"prefer-stable" : true
+}

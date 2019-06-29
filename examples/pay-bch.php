@@ -14,6 +14,7 @@ use Ekliptor\CashP\CashpOptions;
 $xPub = "xpub6CphSGwqZvKFU9zMfC3qLxxhskBFjNAC9imbSMGXCNVD4DRynJGJCYR63DZe5T4bePEkyRoi9wtZQkmxsNiZfR9D6X3jBxyacHdtRpETDvV";
 $requestAmountBCH = 0.002;
 $addressCounter = 1; // increment this and store it (in database) to generate unique addresses
+$qrCodeFile = "./example-qr.png";
 
 
 // setup library
@@ -31,7 +32,8 @@ AbstractBlockchainApi::setLogger(function (string $subject, $error, $data = null
 $address = $cashp->getBlockchain()->createNewAddress($xPub, $addressCounter);
 print_r($address);
 
-print_r($cashp->generateQrCodeForAddress("./example-qr.png", $address->cashAddress, $requestAmountBCH));
+@unlink($qrCodeFile); // ensure it doesn't exist
+print_r($cashp->generateQrCodeForAddress($qrCodeFile, $address->cashAddress, $requestAmountBCH));
 echo '<img src="example-qr.png" alt="qr-code">' . "\n";
 
 // check the address balance (inlcuding TX)
