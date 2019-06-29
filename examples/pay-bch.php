@@ -32,7 +32,7 @@ AbstractBlockchainApi::setLogger(function (string $subject, $error, $data = null
 $address = $cashp->getBlockchain()->createNewAddress($xPub, $addressCounter);
 print_r($address);
 
-@unlink($qrCodeFile); // ensure it doesn't exist
+@unlink($qrCodeFile); // ensure it doesn't exist for this example
 print_r($cashp->generateQrCodeForAddress($qrCodeFile, $address->cashAddress, $requestAmountBCH));
 echo '<img src="example-qr.png" alt="qr-code">' . "\n";
 

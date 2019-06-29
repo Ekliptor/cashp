@@ -46,8 +46,10 @@ If the given file already exists it will NOT be overwritten (QR codes are meant 
 * `float $amountBCH` - The amount in BCH. Can be 0 if the user pays the full amount in SLP tokens. 
 * `float $amountToken` - (optional) The amount of the optional token to be received.
 * `string $tokenID` - (optional) The hex ID of the SLP token. Required if $amountToken > 0.
----
+
 returns `bool` - true on success, false otherwise
+
+---
 
 ##### createPaymentURI(string $address, float $amountBCH, float $amountToken = 0.0, string $tokenID = ""): string
 Return a payment URI (starting with "bitcoincash:" or "simpleledger:" if $amountToken > 0) for the given $address.
@@ -55,8 +57,10 @@ Return a payment URI (starting with "bitcoincash:" or "simpleledger:" if $amount
 * `float $amountBCH` - The amount in BCH to receive.
 * `float $amountToken` - (optional) The amount of SLP tokens to receive.
 * `string $tokenID` - (optional) The hex ID of the SLP token. Required if $amountToken > 0.
----
+
 returns `string`
+
+---
 
 
 #### CashpOptions class
@@ -75,8 +79,10 @@ An API to get BCH exchanges rates to fiat currencies.
 ##### getRate(string $currency = "USD"): float
 Get the current exchange rate for BCH.
 * `string $currency` - A fiat currency such as USD|EUR|JPY
----
+
 returns `float`
+
+---
 
 
 #### BlockchainApi class
@@ -94,48 +100,62 @@ Set a a HTTP implementation for requests (cURL, Wordpress HTTP API,...)
 ##### getConfirmationCount(string $transactionID): int
 Return the number of confirmation for the given blockchain transaction ID.
 * `string $transactionID`
----
+
 returns `int` - The number of confirmations or -1 if the $transactionID doesn't exist.
+
+---
 
 ##### createNewAddress(string $xPub, int $addressCount, string $hdPathFormat = '0/%d'): ?BchAddress
 Creates a new address from the xPub. It will automatically increment the counter in the hdPath parameter to derive the next deterministic address.
 * `string $xPub` - The extended public key. Called 'Master Public Key' in Electron Cash.
 * `int $addressCount` - The number of the next address to generate a unique address. Usually this should be an incrementing integer.
 * `string $hdPathFormat` - (optional) The HD path to be used for creating address children.
----
+
 returns `BchAddress` - the address or `null` on failure
+
+---
 
 ##### getTokenInfo(string $tokenID): ?SlpToken
 Get general (network-wide) info about a SLP token.
 * `string $tokenID` - 
----
+
 returns `SlpToken` - The token or `null` on failure
+
+---
 
 ##### getAddressBalance(string $address): float
 Return the BCH balance of the given address (including unconfirmed transactions).
 * `string $address` - The BCH address in CashAddress format.
----
+
 returns `float` - The balance or -1 if the address doesn't exist.
+
+---
 
 ##### getAddressTokenBalance(string $address, string $tokenID): float
 Return the token balance of the given SLP address (including unconfirmed transactions).
 * `string $address` - 
 * `string $tokenID` - 
----
+
 returns `float` - The balance or -1 if the address doesn't exist.
+
+---
 
 ##### getAddressDetails(string $address): ?BchAddress
 Return the BCH Address with all its properties such as balance, TXIDs,...
 * `string $address` - The BCH address in CashAddress format.
----
+
 returns `BchAddress` - the address or `null` on failure
+
+---
 
 ##### getSlpAddressDetails(string $address, string $tokenID): ?SlpTokenAddress
 Return the SLP token details of a given address include balance, TXIDs,...
 * `string $address` - 
 * `string $tokenID` - 
----
+
 returns `SlpTokenAddress` - The token or `null` on failure
+
+---
 
 
 ## ToDo
