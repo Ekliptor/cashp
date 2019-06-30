@@ -35,6 +35,8 @@ Homestead.json
 .project
 .buildpath
 .settings
+tpl/js/.idea
+tpl/js/node_modules
 
 # Logs
 logs

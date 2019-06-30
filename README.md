@@ -62,6 +62,22 @@ returns `string`
 
 ---
 
+##### getBadgerButton(array $btnConf, string $address, float $amountBCH, float $amountToken = 0.0, string $tokenID = ""): string
+Get the HTML code of a BadgerButton. See https://badger.bitcoin.com/
+* `array $btnConf` - associative array with buttom config
+    * text (string) The text of the button
+    * callback (string, optional) The name of a callback function present on the global window to be called after payment. Parameters: string chainTxID
+    * cssClass (string, optional) Additional CSS classes for the button.
+    * forceIndludeJs (bool, optional) default false - Include the JavaScript library again. Only use this if you are generating HTML for multiple pages.
+* `string $address` - The receiving BCH (or SLP) address.
+* `float $amountBCH` - The amount in BCH to receive.
+* `float $amountToken` - (optional) The amount of SLP tokens to receive.
+* `string $tokenID` - (optional) The hex ID of the SLP token. Required if $amountToken > 0.
+
+returns `string` - The button HTML.
+
+---
+
 
 #### CashpOptions class
 A set of advanced config properties.
@@ -99,7 +115,7 @@ Set a a HTTP implementation for requests (cURL, Wordpress HTTP API,...)
 
 ##### getConfirmationCount(string $transactionID): int
 Return the number of confirmation for the given blockchain transaction ID.
-* `string $transactionID`
+* `string $transactionID` - 
 
 returns `int` - The number of confirmations or -1 if the $transactionID doesn't exist.
 
@@ -160,7 +176,6 @@ returns `SlpTokenAddress` - The token or `null` on failure
 
 ## ToDo
 * add SLP address verification
-* add BadgerWallet HTML & JavaScript output
 * implement more functions of the REST API
 
 

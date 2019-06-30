@@ -27,6 +27,10 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 		$jsonRes = json_decode($response);
 		if (!$jsonRes)
 			return null;
+		else if (isset($jsonRes->error) && $jsonRes->error) {
+			$this->logError("Error creating new address", $jsonRes->error);
+			return null;
+		}
 		return new BchAddress($jsonRes->cashAddress, $jsonRes->legacyAddress, $jsonRes->slpAddress);
 	}
 	

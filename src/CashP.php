@@ -10,6 +10,8 @@ use Ekliptor\CashP\BlockchainApi\AbstractBlockchainApi;
  *
  */
 class CashP {
+	const BADGER_LIB_URL = "https://developer.bitcoin.com/badger/badgerButton-1.0.1.js";
+	
 	/** @var CashP */
 	//private static $instance = null;
 	
@@ -23,6 +25,8 @@ class CashP {
 	protected $rate;
 	/** @var AbstractBlockchainApi */
 	protected $blockchainApi;
+	/** @var bool */
+	protected $includedButtonCode = false;
 	
 	// expose the constructor and let the user create multiple instances
 	// this allows for an easier API because we can move all config into CashpOptions
@@ -65,6 +69,10 @@ class CashP {
 		return $this->blockchainApi;
 	}
 	
+	public function toSatoshis(float $bch): float {
+		return floor($bch * 100000000);
+	}
+	
 	/**
 	 * Generate a QR code for a payment.
 	 * @param string $fileLocal A path on your local filesystem to store the QR code file. This should be accessible from the web if you want
@@ -102,11 +110,51 @@ class CashP {
 		$uri = sprintf("bitcoincash:%s?amount=%s", $address, number_format($amountBCH, $tokenDigits));
 		if ($amountToken > 0.0) {
 			if (empty($tokenID))
-				throw new \Error("A payment URI with SLP tokens must use the $tokenID parameter.");
+				throw new \Error("A payment URI with SLP tokens must use the tokenID parameter.");
 			$uri = sprintf("simpleledger:%s?amount=%s", $address, number_format($amountBCH, $tokenDigits));
 			$uri .= sprintf("&amount1=%s-%s", number_format($amountToken, $tokenDigits), $tokenID);
 		}
 		return $uri;
+	}
+	
+	/**
+	 * Get the HTML code of a BadgerButton. See https://badger.bitcoin.com/
+	 * @param array $btnConf associative array with buttom config
+	 * 		text (string) The text of the button
+	 * 		callback (string, optional) The name of a callback function present on the global window to be called after payment. Parameters: string chainTxID
+	 * 		cssClass (string, optional) Additional CSS classes for the button.
+	 * 		forceIndludeJs (bool, optional) default false - Include the JavaScript library again. Only use this if you are generating HTML for multiple pages.
+	 * @param string $address The receiving BCH (or SLP) address.
+	 * @param float $amountBCH The amount in BCH to receive.
+	 * @param float $amountToken (optional) The amount of SLP tokens to receive.
+	 * @param string $tokenID (optional) The hex ID of the SLP token. Required if $amountToken > 0.
+	 * @return string The button HTML.
+	 */
+	public function getBadgerButton(array $btnConf, string $address, float $amountBCH, float $amountToken = 0.0, string $tokenID = ""): string {
+		if (!isset($btnConf['text']) || empty($btnConf['text']))
+			throw new \Error("BadgerButton text can not be empty.");
+		$useTokenPayments = $amountToken > 0.0 && empty($tokenID);
+		if ($useTokenPayments === true)
+			throw new \Error("A payment URI with SLP tokens must use the tokenID parameter.");
+		
+		$btnConf = array_merge($btnConf, array(
+				'includedButtonCode' => $this->includedButtonCode,
+				'address' => $address,
+				'amountBCH' => $amountBCH,
+				'tokenAmount' => $amountToken,
+				'sats' => $this->toSatoshis($amountBCH),
+				'tokenID' => $tokenID,
+				'useTokenPayments' => $useTokenPayments,
+				'buttonLibSrc' => CashP::BADGER_LIB_URL,
+				'forceIndludeJs'=> isset($btnConf['forceIndludeJs']) && $btnConf['forceIndludeJs'] === true,
+				'script' => file_get_contents(__DIR__ . '/../tpl/js/bundle.js') // we don't know our web root, so we must include it inline
+		));
+		ob_start();
+		include __DIR__ . '/../tpl/badgerButton.php';
+		$buttonHtml = ob_get_contents();
+		ob_end_clean();
+		$this->includedButtonCode = $btnConf['includedButtonCode'];
+		return $buttonHtml;
 	}
 }
 ?>
