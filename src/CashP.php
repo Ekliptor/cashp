@@ -111,8 +111,11 @@ class CashP {
 		if ($amountToken > 0.0) {
 			if (empty($tokenID))
 				throw new \Error("A payment URI with SLP tokens must use the tokenID parameter.");
-			$uri = sprintf("simpleledger:%s?amount=%s", $address, number_format($amountBCH, $tokenDigits));
-			$uri .= sprintf("&amount1=%s-%s", number_format($amountToken, $tokenDigits), $tokenID);
+			if ($amountBCH > 0.0)
+				$uri = sprintf("simpleledger:%s?amount=%s&", $address, number_format($amountBCH, $tokenDigits));
+			else
+				$uri = sprintf("simpleledger:%s?", $address);
+			$uri .= sprintf("amount1=%s-%s", number_format($amountToken, $tokenDigits), $tokenID);
 		}
 		return $uri;
 	}
