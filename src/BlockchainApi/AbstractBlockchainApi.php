@@ -69,8 +69,14 @@ abstract class AbstractBlockchainApi {
 	public abstract function getConfirmationCount(string $transactionID): int;
 	
 	/**
-	 * Creates a new address from the xPub. It will automatically increment the counter in the hdPath parameter to
-	 * derive the next deterministic address.
+	 * Get the blocktime of the transaction.
+	 * @param string $transactionID
+	 * @return int The time in seconds (UNIX timestamp) or -1 if the transaction doesn't exist.
+	 */
+	public abstract function getBlocktime(string $transactionID): int;
+	
+	/**
+	 * Creates a new address from the xPub.
 	 * @param string $xPub The extended public key. Called 'Master Public Key' in Electron Cash.
 	 * @param int $addressCount The number of the next address to generate a unique address. Usually this should be an incrementing integer.
 	 * @param string $hdPathFormat (optional) The HD path to be used for creating address children.

@@ -122,7 +122,7 @@ returns `int` - The number of confirmations or -1 if the $transactionID doesn't 
 ---
 
 ##### createNewAddress(string $xPub, int $addressCount, string $hdPathFormat = '0/%d'): ?BchAddress
-Creates a new address from the xPub. It will automatically increment the counter in the hdPath parameter to derive the next deterministic address.
+Creates a new address from the xPub.
 * `string $xPub` - The extended public key. Called 'Master Public Key' in Electron Cash.
 * `int $addressCount` - The number of the next address to generate a unique address. Usually this should be an incrementing integer.
 * `string $hdPathFormat` - (optional) The HD path to be used for creating address children.

@@ -18,6 +18,13 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 		return (int)$txDetails->confirmations;
 	}
 	
+	public function getBlocktime(string $transactionID): int { 
+		$txDetails = $this->getTransactionDetails($transactionID);
+		if (!$txDetails || !isset($txDetails->blocktime))
+			return -1; // not found
+		return (int)$txDetails->blocktime;
+	}
+	
 	public function createNewAddress(string $xPub, int $addressCount, string $hdPathFormat = '0/%d'): ?BchAddress {
 		$nextHdPath = sprintf($hdPathFormat, $addressCount); // since update on 2019-06-05 only works with plain numbers
 		$url = sprintf($this->blockchainApiUrl . 'address/fromXPub/%s?hdPath=%s', $xPub, $nextHdPath);
