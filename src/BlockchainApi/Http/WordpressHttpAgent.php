@@ -13,7 +13,7 @@ class WordpressHttpAgent extends AbstractHttpAgent {
 	public function get(string $url, array $options = array()) {
 		$response = wp_remote_get($url, $this->getHttpOptions($options));
 		if ($response instanceof \WP_Error) {
-			$this->logError("Error on HTTP GET", $response->get_error_messages());
+			$this->logError("Error on HTTP GET $url", $response->get_error_messages());
 			return false;
 		}
 		$body = wp_remote_retrieve_body($response);
