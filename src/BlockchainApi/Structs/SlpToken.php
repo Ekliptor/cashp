@@ -21,6 +21,10 @@ class SlpToken {
 	public $decimals = 0;
 	/** @var int */
 	public $timestamp_unix = 0;
+	/** @var float */
+	public $rate = 0.0;
+	/** @var string */
+	public $icon = '';
 	
 	public function __construct() {
 	}
