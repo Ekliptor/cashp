@@ -16,7 +16,12 @@ class WordpressHttpAgent extends AbstractHttpAgent {
 			$this->logError("Error on HTTP GET $url", $response->get_error_messages());
 			return false;
 		}
+		$responseCode = wp_remote_retrieve_response_code( $response );
 		$body = wp_remote_retrieve_body($response);
+		if ($responseCode !== 200) {
+			$this->logError("Invalid HTTP response code $responseCode on GET: $url", $body);
+			return false;
+		}
 		return $body;
 	}
 	

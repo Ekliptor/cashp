@@ -100,10 +100,10 @@ class CashP {
 	 * @param float $amountBCH The amount in BCH to receive.
 	 * @param float $amountToken (optional) The amount of SLP tokens to receive.
 	 * @param string $tokenID (optional) The hex ID of the SLP token. Required if $amountToken > 0.
+	 * @param int $tokenDigits (optional). The number of decimal places to use in the payment URI of this token.
 	 * @return string
 	 */
-	public function createPaymentURI(string $address, float $amountBCH, float $amountToken = 0.0, string $tokenID = ""): string {
-		$tokenDigits = 8; // TODO add parameter for this?
+	public function createPaymentURI(string $address, float $amountBCH, float $amountToken = 0.0, string $tokenID = "", int $tokenDigits = 8): string {
 		$address = preg_replace("/.+:/i", "", $address);
 		// we use the bitcoincash URI if tokens are disabled because bitcoin.com and other wallets only support this as of June 2019
 		//$uri = "simpleledger:$address?amount=$amountBCH";

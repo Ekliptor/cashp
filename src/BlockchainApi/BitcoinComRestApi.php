@@ -54,7 +54,7 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 	
 	public function getAddressBalance(string $address): float {
 		$bchAddress = $this->getAddressDetails($address);
-		if ($bchAddress === null)
+		if ($bchAddress === null || !isset($bchAddress->balance))
 			return -1.0;
 		return $bchAddress->balance;
 	}
@@ -66,7 +66,7 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 		if ($response === false)
 			return -1.0;
 		$jsonRes = json_decode($response);
-		if (!$jsonRes)
+		if (!$jsonRes || !isset($jsonRes->balance))
 			return -1.0;
 		return $jsonRes->balance;
 	}

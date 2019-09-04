@@ -25,6 +25,8 @@ class SlpToken {
 	public $rate = 0.0;
 	/** @var string */
 	public $icon = '';
+	/** @var bool */
+	public $enabled = true;
 	
 	public function __construct() {
 	}
