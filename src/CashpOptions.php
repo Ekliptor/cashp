@@ -47,10 +47,16 @@ class CashpOptions {
 	//public $hdPathFormat = "0/%d";
 	
 	/**
-	 * The REST API backend implementation to use. Allowed values: BitcoinComRestApi
+	 * The REST API backend implementation to use. Allowed values: BitcoinComRestApi|SlpDbApi
 	 * @var string
 	 */
 	public $blockchainApiImplementation = "BitcoinComRestApi";
+	
+	/**
+	 * The URL of the chosen $blockchainApiImplementation REST API to query. Leave empty to use each implementations default value.
+	 * @var string
+	 */
+	public $blockchainApiUrl = "";
 	
 	/**
 	 * The first value to pass into $hdPathFormat when creating a new address.

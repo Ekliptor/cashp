@@ -37,6 +37,12 @@ class SlpToken {
 		foreach ($instance as $key => $value) {
 			if (isset($json->$key))
 				$instance->$key = $json->$key;
+			
+			// SLP DB conversions
+			else if ($key === 'id' && isset($json->tokenIdHex))
+				$instance->id = $json->tokenIdHex;
+			else if ($key === 'documentHash' && isset($json->documentSha256Hex))
+				$instance->documentHash = $json->documentSha256Hex;
 		}
 		return $instance;
 	}

@@ -49,7 +49,7 @@ class CashP {
 		if ($this->options->httpAgent === null)
 			$this->options->httpAgent = new BasicHttpAgent(null, array('timeout' => $this->options->httpTimeoutSec));
 		$this->rate = new ExchangeRate($this->options->httpAgent, $options->exchangeRateExpirationMin);
-		$this->blockchainApi = AbstractBlockchainApi::getInstance($options->blockchainApiImplementation);
+		$this->blockchainApi = AbstractBlockchainApi::getInstance($options->blockchainApiImplementation, $options->blockchainApiUrl);
 		$this->blockchainApi->setHttpAgent($this->options->httpAgent);
 	}
 	

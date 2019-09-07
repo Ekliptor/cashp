@@ -43,5 +43,13 @@ class SlpTokenAddress extends SlpToken {
 		}
 		return $instance;
 	}
+	
+	public static function copyProperties(SlpTokenAddress $instance, $props): SlpTokenAddress {
+		foreach ($props as $key => $value) {
+			if (isset($instance->$key))
+				$instance->$key = $value;
+		}
+		return $instance;
+	}
 }
 ?>

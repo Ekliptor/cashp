@@ -9,6 +9,8 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 	
 	protected function __construct(string $blockchainApiUrl = '') {
 		parent::__construct($blockchainApiUrl);
+		if (empty($this->blockchainApiUrl))
+			$this->blockchainApiUrl = "https://rest.bitcoin.com/v2/";
 	}
 	
 	public function getConfirmationCount(string $transactionID): int {

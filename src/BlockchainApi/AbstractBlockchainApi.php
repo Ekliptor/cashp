@@ -6,6 +6,12 @@ use Ekliptor\CashP\BlockchainApi\Structs\SlpToken;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpTokenAddress;
 use Ekliptor\CashP\BlockchainApi\Http\AbstractHttpAgent;
 
+class BlockchainException extends \Exception {
+	public function __construct($message = null, $code = null, $previous = null) {
+		parent::__construct($message, $code, $previous);
+	}
+}
+
 
 abstract class AbstractBlockchainApi {
 	/** @var AbstractBlockchainApi */
@@ -14,7 +20,7 @@ abstract class AbstractBlockchainApi {
 	protected static $loggerFn = null;
 	
 	/** @var string */
-	protected $blockchainApiUrl = 'https://rest.bitcoin.com/v2/';
+	protected $blockchainApiUrl = '';
 	/** @var array */
 	protected $transactionCache = array(); // associative array with TXID as key
 	/** @var AbstractHttpAgent */
@@ -39,6 +45,9 @@ abstract class AbstractBlockchainApi {
 		switch ($className) {
 			case 'BitcoinComRestApi':
 				self::$instance = new BitcoinComRestApi($blockchainApiUrl);
+				return self::$instance;
+			case 'SlpDbApi':
+				self::$instance = new SlpDbApi($blockchainApiUrl);
 				return self::$instance;
 		}
 		throw new \Error("Unable to load bloackchain API class (not existing?): " . $className);
