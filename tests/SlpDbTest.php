@@ -24,6 +24,16 @@ final class RestBackendTest extends TestCase {
 		$this->assertGreaterThan(0.0, $balance, "SLP token balance on address is 0.");
 	}
 	
+	public function testTransactionResult(): void {
+		$txid = '2e8222cc5ed6f90f8c419333f32bf09d9a701f780ddb49341f2690792fb94047';
+		$cashp = $this->getSlpDbCashP();
+		$confirmations = $cashp->getBlockchain()->getConfirmationCount($txid);
+		$this->assertGreaterThan(1, $confirmations, "TX has 0 confirmations.");
+		
+		$blocktimeSec = $cashp->getBlockchain()->getBlocktime($txid);
+		$this->assertEquals(1567707868, $blocktimeSec, "The blocktime (UNIX timestamp) of the TX does not match 1567707868.");
+	}
+	
 	protected function getSlpDbCashP() {
 		$options = new CashpOptions();
 		$options->blockchainApiImplementation = 'SlpDbApi';

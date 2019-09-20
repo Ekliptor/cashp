@@ -174,9 +174,16 @@ returns `SlpTokenAddress` - The token or `null` on failure
 ---
 
 
+## Testing
+To run unit tests type the following command in the project root directory (requires PHPUnit, installed automatically with Composer):
+
+`./vendor/bin/phpunit --bootstrap vendor/autoload.php tests`
+
+
 ## ToDo
 * add SLP address verification
 * implement more functions of the REST API
+* implement address creation using xPub with SLPDB (after it's supported)
 
 
 ## Contact

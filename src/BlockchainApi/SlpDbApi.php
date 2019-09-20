@@ -16,13 +16,38 @@ class SlpDbApi extends AbstractBlockchainApi {
 	}
 	
 	public function getConfirmationCount(string $transactionID): int {
-		// should be easy since they return the block number for each TX, so just the difference?
-		throw new BlockchainException("Getting confirmation count is not yet supported by SLPDB.");
+		$response = $this->executeQuery('{
+			  "v": 3,
+			  "q": {
+			    "find": {"tx.h": "%s"},
+			    "limit": 10
+			  }
+			}', $transactionID);
+		
+		// if TX is unconfirmed -> 1 item in the "u" collection, confirmed -> in the "c" collection
+		if ($this->isValidQueryResponse($response, 'u') === false) {
+			if ($this->isValidQueryResponse($response, 'c') === false)
+				return -1; // the TX doesn't exist (yet)
+			// TODO return:  "current block height" - $response->c[0]->blk->i
+			return 3;
+		}
+		return 0; // the TX exists and is unconfirmed (not in a block yet)
 	}
 	
 	public function getBlocktime(string $transactionID): int { 
-		// should be easy (approx): block number * 10min + offset
-		throw new BlockchainException("Getting the blocktime is not yet supported by SLPDB.");
+		$response = $this->executeQuery('{
+			  "v": 3,
+			  "q": {
+			    "find": {"tx.h": "%s"},
+			    "limit": 10
+			  }
+			}', $transactionID);
+		
+		if ($this->isValidQueryResponse($response, 'c') === false)
+			return -1; // not found
+		if (!isset($response->c[0]->blk) || !isset($response->c[0]->blk->t))
+			return -1; // invalid response, shouldn't happen
+		return $response->c[0]->blk->t; // in seconds
 	}
 	
 	public function createNewAddress(string $xPub, int $addressCount, string $hdPathFormat = '0/%d'): ?BchAddress {

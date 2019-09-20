@@ -15,3 +15,8 @@ https://slpdb.fountainhead.cash/explorer/ewogICJ2IjogMywKICAicSI6IHsKICAgICJkYiI
 
 getting token info ^
 
+
+https://slpdb.fountainhead.cash/explorer/ewogICJ2IjogMywKICAicSI6IHsKICAgICJmaW5kIjogeyJ0eC5oIjogImQ1MTdhNGNmZGY1NjFjMTUxZmI1ZTE3YjIxMWRjODZmNGVlMDFiNjEzMDIyZDI4MDYwYzlkNTkzNTNjYjUxOTUifSwKICAgICJsaW1pdCI6IDEwCiAgfQp9
+
+^ TX unconfirmed you'll have 1 item in the "u" collection, and if confirmed in the "c" collection.
+If you look at the property "blk" you can get the block data
