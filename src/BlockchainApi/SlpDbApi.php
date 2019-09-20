@@ -87,7 +87,7 @@ class SlpDbApi extends AbstractBlockchainApi {
 	}
 	
 	public function getAddressDetails(string $address): ?BchAddress {
-		
+		throw new BlockchainException("Getting BCH address balances is not yet supported by SLPDB.");
 	}
 	
 	public function getSlpAddressDetails(string $address, string $tokenID): ?SlpTokenAddress {
