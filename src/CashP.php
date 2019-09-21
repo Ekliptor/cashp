@@ -107,15 +107,15 @@ class CashP {
 		$address = preg_replace("/.+:/i", "", $address);
 		// we use the bitcoincash URI if tokens are disabled because bitcoin.com and other wallets only support this as of June 2019
 		//$uri = "simpleledger:$address?amount=$amountBCH";
-		$uri = sprintf("bitcoincash:%s?amount=%s", $address, number_format($amountBCH, $tokenDigits));
+		$uri = sprintf("bitcoincash:%s?amount=%s", $address, number_format($amountBCH, $tokenDigits, ".", ""));
 		if ($amountToken > 0.0) {
 			if (empty($tokenID))
 				throw new \Error("A payment URI with SLP tokens must use the tokenID parameter.");
 			if ($amountBCH > 0.0)
-				$uri = sprintf("simpleledger:%s?amount=%s&", $address, number_format($amountBCH, $tokenDigits));
+				$uri = sprintf("simpleledger:%s?amount=%s&", $address, number_format($amountBCH, $tokenDigits, ".", ""));
 			else
 				$uri = sprintf("simpleledger:%s?", $address);
-			$uri .= sprintf("amount1=%s-%s", number_format($amountToken, $tokenDigits), $tokenID);
+			$uri .= sprintf("amount1=%s-%s", number_format($amountToken, $tokenDigits), $tokenID, ".", "");
 		}
 		return $uri;
 	}
