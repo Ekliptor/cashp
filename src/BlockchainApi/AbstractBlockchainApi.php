@@ -130,6 +130,29 @@ abstract class AbstractBlockchainApi {
 	 */
 	public abstract function getSlpAddressDetails(string $address, string $tokenID): ?SlpTokenAddress;
 	
+	/**
+	 * Creates a new addresses from the xPub repeatedly by incrementing $addressCount in $hdPathFormat until it finds an address with an empty balance (not used by another wallet).
+	 * @param string $xPub The extended public key. Called 'Master Public Key' in Electron Cash.
+	 * @param int $addressCount The number of the next address to generate a unique address. Usually this should be an incrementing integer.
+	 * @param string $hdPathFormat (optional) The HD path to be used for creating address children.
+	 * @param string $tokenID Check for 0 token balance of the token with this ID. If not supplied it checks for 0 BCH balance.
+	 * @return BchAddress the address or null on failure
+	 */
+	public function createNewEmptyAddress(string $xPub, int $addressCount, string $hdPathFormat = '0/%d', string $tokenID = ""): ?BchAddress {
+		while (true)
+		{
+			$address = $this->createNewAddress($xPub, $addressCount, $hdPathFormat);
+			if ($address === null)
+				return null;
+			$balance = $tokenID ? $this->getAddressBalance($address->cashAddress) : $this->getAddressTokenBalance($address, $tokenID);
+			if ($balance > 0.0)
+				$addressCount++;
+			else
+				return $address;
+			// TODO add counter to give up and return null after n tries?
+		}
+	}
+	
 	protected function logError(string $subject, $error, $data = null): void {
 		if (static::$loggerFn !== null)
 			call_user_func(static::$loggerFn, $subject, $error, $data);
