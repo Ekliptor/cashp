@@ -144,7 +144,7 @@ abstract class AbstractBlockchainApi {
 			$address = $this->createNewAddress($xPub, $addressCount, $hdPathFormat);
 			if ($address === null)
 				return null;
-			$balance = $tokenID ? $this->getAddressBalance($address->cashAddress) : $this->getAddressTokenBalance($address, $tokenID);
+			$balance = $tokenID ? $this->getAddressBalance($address->cashAddress) : $this->getAddressTokenBalance($address->slpAddress, $tokenID);
 			if ($balance > 0.0)
 				$addressCount++;
 			else

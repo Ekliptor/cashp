@@ -23,6 +23,8 @@ class SlpToken {
 	public $timestamp_unix = 0;
 	/** @var float */
 	public $rate = 0.0;
+	/** @var bool Whether to update the token rate from an API. */
+	public $dynamicRate = false;
 	/** @var string */
 	public $icon = '';
 	/** @var bool */
