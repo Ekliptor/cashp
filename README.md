@@ -78,6 +78,22 @@ returns `string` - The button HTML.
 
 ---
 
+##### isValidBchAddress(string $bchAddress): bool
+Check if a BCH address is valid.
+* `string $bchAddress` - The address in CashAddress format starting with 'bitcoincash:'
+
+returns `bool` - True if the address is valid, false otherwise.
+
+---
+
+##### isValidSlpAddress(string $slpAddress): bool
+Check if a SLP address is valid.
+* `string $slpAddress` - The address starting with 'simpleledger:'
+
+returns `bool` - True if the address is valid, false otherwise.
+
+---
+
 
 #### CashpOptions class
 A set of advanced config properties.

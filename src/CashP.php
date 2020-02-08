@@ -159,5 +159,45 @@ class CashP {
 		$this->includedButtonCode = $btnConf['includedButtonCode'];
 		return $buttonHtml;
 	}
+	
+	/**
+	 * Check if a BCH address is valid.
+	 * @param string $bchAddress The address in CashAddress format starting with 'bitcoincash:'
+	 * @return bool True if the address is valid, false otherwise.
+	 */
+	public function isValidBchAddress(string $bchAddress): bool {
+		if (empty($bchAddress))
+			return false;
+		// TODO improve this by checking the actual address format
+		$bchAddress = strtolower(trim($bchAddress));
+		if (preg_match("/^bitcoincash:/", $bchAddress) !== 1)
+			return false;
+		if (strlen($bchAddress) !== 54)
+			return false;
+		$addressParts = explode(':', $bchAddress);
+		if (count($addressParts) !== 2)
+			return false;
+		return preg_match("/^[a-z0-9]+$/", $addressParts[1]) === 1;
+	}
+	
+	/**
+	 * Check if a SLP address is valid.
+	 * @param string $slpAddress The address starting with 'simpleledger:'
+	 * @return bool True if the address is valid, false otherwise.
+	 */
+	public function isValidSlpAddress(string $slpAddress): bool {
+		if (empty($slpAddress))
+			return false;
+		// TODO improve this by checking the actual address format
+		$slpAddress = strtolower(trim($slpAddress));
+		if (preg_match("/^simpleledger:/", $slpAddress) !== 1)
+			return false;
+		if (strlen($slpAddress) !== 55)
+			return false;
+		$addressParts = explode(':', $slpAddress);
+		if (count($addressParts) !== 2)
+			return false;
+		return preg_match("/^[a-z0-9]+$/", $addressParts[1]) === 1;
+	}
 }
 ?>
