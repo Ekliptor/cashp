@@ -10,7 +10,7 @@ use Ekliptor\CashP\BlockchainApi\Http\CurlHttpAgent;
 use Ekliptor\CashP\BlockchainApi\BchdProtoGatewayApi;
 use Ekliptor\CashP\CashpOptions;
 
-final class RestBackendTest extends TestCase {
+final class BchdBackendTest extends TestCase {
 	public function testCurrencyRateFetch(): void {
 		$cashp = $this->getCashpForTesting();
 		// this uses index-api.bitcoin.com but we keep the test here to ensure it works with BCHD too
