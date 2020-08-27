@@ -102,7 +102,7 @@ Values: BasicHttpAgent|CurlHttpAgent|WordpressHttpAgent
 Defaults to BasicHttpAgent, but you should use a better one according to your PHP setup.
 * `$exchangeRateExpirationMin = 60` - How long the crawled exchange rate shall stay in cache. Currently rates are not saved beyond script execution.
 * `$httpTimeoutSec = 10` - The timeout for HTTP requests to the REST API backend.
-* `$blockchainApiImplementation = "BitcoinComRestApi"` - The REST API backend implementation to use. Allowed values: BitcoinComRestApi
+* `$blockchainApiImplementation = "BitcoinComRestApi"` - The REST API backend implementation to use. Allowed values: BitcoinComRestApi|BchdProtoGatewayApi|SlpDbApi
 
 
 #### ExchangeRate class
