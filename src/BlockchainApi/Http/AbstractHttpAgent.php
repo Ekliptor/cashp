@@ -38,6 +38,15 @@ abstract class AbstractHttpAgent {
 	 */
 	public abstract function get(string $url, array $options = array());
 	
+	/**
+	 * Perform a HTTP POST request with Content-Type "application/json".
+	 * @param string $url The full URL string (including possible query params).
+	 * @param array $data The post data as string key-value pairs (not encoded).
+	 * @param array $options additional options (depending on the specific HTTP implementation) valid: timeout|userAgent|maxRedirects
+	 * @return string|bool The response body or false on failure.
+	 */
+	public abstract function post(string $url, array $data = array(), array $options = array());
+	
 	protected function logError(string $subject, $error, $data = null): void {
 		if (static::$loggerFn !== null)
 			call_user_func(static::$loggerFn, $subject, $error, $data);

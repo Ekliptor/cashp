@@ -37,6 +37,8 @@ class BchAddress {
 	// TODO add paging using currentPage and pagesTotal for big addresses
 	
 	public function __construct(string $cashAddress, string $legacyAddress = '', string $slpAddress = '') {
+		if (substr($cashAddress, 0, 12) !== 'bitcoincash:')
+			$cashAddress = 'bitcoincash:' . $cashAddress;
 		$this->cashAddress = $cashAddress;
 		$this->legacyAddress = $legacyAddress;
 		$this->slpAddress = $slpAddress;

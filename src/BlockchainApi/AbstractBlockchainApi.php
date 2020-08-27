@@ -46,6 +46,9 @@ abstract class AbstractBlockchainApi {
 			case 'BitcoinComRestApi':
 				self::$instance = new BitcoinComRestApi($blockchainApiUrl);
 				return self::$instance;
+			case 'BchdProtoGatewayApi':
+				self::$instance = new BchdProtoGatewayApi($blockchainApiUrl);
+				return self::$instance;	
 			case 'SlpDbApi':
 				self::$instance = new SlpDbApi($blockchainApiUrl);
 				return self::$instance;

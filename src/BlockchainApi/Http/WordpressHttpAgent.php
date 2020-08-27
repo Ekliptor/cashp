@@ -25,6 +25,24 @@ class WordpressHttpAgent extends AbstractHttpAgent {
 		return $body;
 	}
 	
+	public function post(string $url, array $data = array(), array $options = array()) {
+		$wpOptions = $this->getHttpOptions($options);
+		$wpOptions['headers']['Content-Type'] = 'application/json';
+		$wpOptions['body'] = json_encode($data);
+		$response = wp_remote_post($url, $wpOptions);
+		if ($response instanceof \WP_Error) {
+			$this->logError("Error on HTTP POST $url", $response->get_error_messages());
+			return false;
+		}
+		$responseCode = wp_remote_retrieve_response_code( $response );
+		$body = wp_remote_retrieve_body($response);
+		if ($responseCode !== 200) {
+			$this->logError("Invalid HTTP response code $responseCode on GET: $url", $body);
+			return false;
+		}
+		return $body;
+	}
+	
 	protected function getHttpOptions(array $options = array()) {
 		return array(
 				'timeout' => isset($options['timeout']) ? $options['timeout'] : $this->timeoutSec, //seconds

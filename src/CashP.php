@@ -69,8 +69,12 @@ class CashP {
 		return $this->blockchainApi;
 	}
 	
-	public function toSatoshis(float $bch): float {
+	public static function toSatoshis(float $bch): float {
 		return floor($bch * 100000000);
+	}
+	
+	public static function fromSatoshis(float $sats): float {
+		return $sats / 100000000.0;
 	}
 	
 	/**
@@ -145,7 +149,7 @@ class CashP {
 				'address' => $address,
 				'amountBCH' => $amountBCH,
 				'tokenAmount' => $amountToken,
-				'sats' => $this->toSatoshis($amountBCH),
+				'sats' => static::toSatoshis($amountBCH),
 				'tokenID' => $tokenID,
 				'useTokenPayments' => $useTokenPayments,
 				'buttonLibSrc' => CashP::BADGER_LIB_URL,
@@ -198,6 +202,34 @@ class CashP {
 		if (count($addressParts) !== 2)
 			return false;
 		return preg_match("/^[a-z0-9]+$/", $addressParts[1]) === 1;
+	}
+	
+	/**
+	 * Convert a hex string to base64.
+	 * @param string $hex
+	 * @return string
+	 */
+	public static function hexToBase64(string $hex): string {
+		$return = '';
+		$split = str_split($hex, 2);
+		foreach($split as $pair) {
+			$return .= chr(hexdec($pair));
+		}
+		return base64_encode($return);
+	}
+	
+	/**
+	 * Reverse bytes in a hex string (to deal with endian-ness).
+	 * @param string $hex
+	 * @return string
+	 */
+	public static function reverseBytes(string $hex): string {
+		$return = '';
+		$split = str_split($hex, 2);
+		for($i = count($split)-1; $i >= 0; $i--) {
+			$return .= $split[$i];
+		}
+		return $return;
 	}
 }
 ?>

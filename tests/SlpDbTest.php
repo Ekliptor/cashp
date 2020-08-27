@@ -7,7 +7,7 @@ use Ekliptor\CashP\CashP;
 use Ekliptor\CashP\BlockchainApi\Structs\BchAddress;
 use Ekliptor\CashP\CashpOptions;
 
-final class RestBackendTest extends TestCase {
+final class SlpDbTestTest extends TestCase {
 	public function testGetTokenInfo(): void {
 		$cashp = $this->getSlpDbCashP();
 		$tokenInfo = $cashp->getBlockchain()->getTokenInfo('c4b0d62156b3fa5c8f3436079b5394f7edc1bef5dc1cd2f9d0c4d46f82cca479');

@@ -47,7 +47,7 @@ class CashpOptions {
 	//public $hdPathFormat = "0/%d";
 	
 	/**
-	 * The REST API backend implementation to use. Allowed values: BitcoinComRestApi|SlpDbApi
+	 * The REST API backend implementation to use. Allowed values: BitcoinComRestApi|BchdProtoGatewayApi|SlpDbApi
 	 * @var string
 	 */
 	public $blockchainApiImplementation = "BitcoinComRestApi";

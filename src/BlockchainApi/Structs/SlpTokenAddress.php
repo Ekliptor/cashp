@@ -8,6 +8,10 @@ namespace Ekliptor\CashP\BlockchainApi\Structs;
 class SlpTokenAddress extends SlpToken {
 	/** @var string */
 	public $slpAddress = '';
+	/** @var float */
+	public $balance = 0.0;
+	/** @var int */
+	public $balanceSat = 0;
 	
 	/**
 	 * An indexed array with strings of BCH TXIDs
@@ -17,7 +21,17 @@ class SlpTokenAddress extends SlpToken {
 	
 	public function __construct(string $slpAddress = '') {
 		parent::__construct();
+		if (substr($slpAddress, 0, 13) !== 'simpleledger:')
+			$slpAddress = 'simpleledger:' . $slpAddress;
 		$this->slpAddress = $slpAddress;
+	}
+	
+	public static function withToken(SlpToken $token, string $slpAddress = ''): SlpTokenAddress {
+		$address = new static($slpAddress);
+		foreach ($token as $prop => $value) {
+			$address->$prop = $value;
+		}
+		return $address;
 	}
 	
 	public static function fromAddressJson(array $jsonArr, SlpTokenAddress $instance = null, string $tokenID = ""): SlpTokenAddress {
