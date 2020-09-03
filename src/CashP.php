@@ -10,7 +10,7 @@ use Ekliptor\CashP\BlockchainApi\AbstractBlockchainApi;
  *
  */
 class CashP {
-	const BADGER_LIB_URL = "https://developer.bitcoin.com/badger/badgerButton-1.0.1.js";
+	const BADGER_LIB_URL = "https://badgerwallet.cash/button.js";
 	
 	/** @var CashP */
 	//private static $instance = null;
