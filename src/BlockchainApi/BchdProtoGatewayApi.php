@@ -17,8 +17,10 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 	
 	public function getConfirmationCount(string $transactionID): int {
 		$txDetails = $this->getTransactionDetails($transactionID);
-		if (!$txDetails || !isset($txDetails->transaction) || !isset($txDetails->transaction->confirmations))
+		if (!$txDetails || !isset($txDetails->transaction))
 			return -1; // not found
+		if (!isset($txDetails->transaction->confirmations))
+			return 0;
 		return (int)$txDetails->transaction->confirmations;
 	}
 	
@@ -107,6 +109,7 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$bchAddress->balanceSat += (int)$output->value;
 		}
 		$bchAddress->balance = CashP::fromSatoshis($bchAddress->balanceSat);
+		$bchAddress->transactions = $this->getAddressTransactions($address);
 		return $bchAddress;
 	}
 	
@@ -140,9 +143,15 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			return $slpAddress;
 		
 		foreach ($jsonRes->outputs as $output) {
-			$slpAddress->balanceSat += (int)$output->value;
+			if (!isset($output->slp_token))
+				continue;
+			$curTokenID = bin2hex(base64_decode($output->slp_token->token_id));
+			if ($curTokenID !== $tokenID)
+				continue;
+			$slpAddress->balanceSat += (int)$output->slp_token->amount;
 		}
 		$slpAddress->balance = CashP::fromSatoshis($slpAddress->balanceSat);
+		$slpAddress->transactions = $this->getAddressTransactions($address);
 		
 		return $slpAddress;
 	}
@@ -165,6 +174,42 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$this->transactionCache[$transactionID] = $jsonRes;
 		// {"error":"transaction not found","code":5,"message":"transaction not found"}
 		return $jsonRes;
+	}
+	
+	protected function getAddressTransactions(string $address, $confirmedOnly = false): array {
+		$transactions = array();
+		$url = $this->blockchainApiUrl . 'GetAddressTransactions';
+		$data = array(
+				'address' => $address,
+				'nb_skip' => 0,
+				'nb_fetch' => 0,
+				//'hash' => '',
+				'height' => 0
+		);
+		$response = $this->httpAgent->post($url, $data);
+		if ($response === false)
+			return $transactions;
+		$jsonRes = json_decode($response);
+		if ($jsonRes === null)
+			return $transactions;
+		if (isset($jsonRes->confirmed_transactions)) {
+			foreach ($jsonRes->confirmed_transactions as $tx) {
+				if (!isset($tx->hash))
+					continue;
+				$txHex =  CashP::reverseBytes(bin2hex(base64_decode($tx->hash)));
+				$transactions[] = $txHex;
+			}
+		}
+		if ($confirmedOnly === false && isset($jsonRes->unconfirmed_transactions)) {
+			foreach ($jsonRes->unconfirmed_transactions as $tx) {
+				if (!isset($tx->transaction) || !isset($tx->transaction->hash))
+					continue;
+				$txHex =  CashP::reverseBytes(bin2hex(base64_decode($tx->transaction->hash)));
+				$transactions[] = $txHex;
+			}
+		}
+		
+		return $transactions;
 	}
 	
 	protected function addTokenMetadata(SlpToken $token, array $bchdTokenMetadata): void {

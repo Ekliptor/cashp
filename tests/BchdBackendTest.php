@@ -59,6 +59,7 @@ final class BchdBackendTest extends TestCase {
 		$tokenID = '0be40e351ea9249b536ec3d1acd4e082e860ca02ec262777259ffe870d3b5cc3';
 		$address = $cashp->getBlockchain()->getSlpAddressDetails('simpleledger:qz7j7805n9yjdccpz00gq7d70k3h3nef9y75245epu', $tokenID);
 		$this->assertEquals($tokenID, $address->id, "SLP token ID must be: $tokenID");
+		$this->assertNotEmpty($address->transactions, 'SLP address has no transactions');
 	}
 	
 	public function testAddressCreation(): void {
@@ -71,7 +72,8 @@ final class BchdBackendTest extends TestCase {
 	protected function getCashpForTesting(): CashP {
 		$opts = new CashpOptions();
 		$opts->blockchainApiImplementation = 'BchdProtoGatewayApi';
-		$opts->httpAgent = new BasicHttpAgent();
+		//$opts->httpAgent = new BasicHttpAgent();
+		$opts->httpAgent = new CurlHttpAgent();
 		return new CashP($opts);
 	}
 }
