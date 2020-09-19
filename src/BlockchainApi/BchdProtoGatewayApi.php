@@ -224,6 +224,8 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$token->name = base64_decode($typeInfo->token_name);
 			if (isset($typeInfo->decimals)) // not present with all tokens
 				$token->decimals = $typeInfo->decimals;
+			else
+				$token->decimals = 8;
 			return;
 		}
 		$this->logError("Unable to find desired token metadata", $bchdTokenMetadata);
