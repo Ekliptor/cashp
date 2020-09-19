@@ -148,9 +148,10 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$curTokenID = bin2hex(base64_decode($output->slp_token->token_id));
 			if ($curTokenID !== $tokenID)
 				continue;
-			$slpAddress->balanceSat += (int)$output->slp_token->amount;
+			$slpAddress->balance += (int)$output->slp_token->amount;
 		}
-		$slpAddress->balance = CashP::fromSatoshis($slpAddress->balanceSat);
+		if ($slpAddress->decimals > 0)
+			$slpAddress->balance /= $slpAddress->decimals;
 		$slpAddress->transactions = $this->getAddressTransactions($address);
 		
 		return $slpAddress;
@@ -217,6 +218,9 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$id = bin2hex(base64_decode($meta->token_id));
 			if ($id !== $token->id)
 				continue;
+			
+			// Type 1 and NFT1 Group types same, its just the versionType field is 0x01 and 0x81
+			// NFT1 Child different
 			$type = $meta->token_type;
 			$typeKey = "type$type";
 			$typeInfo = $meta->$typeKey;
@@ -225,7 +229,15 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			if (isset($typeInfo->decimals)) // not present with all tokens
 				$token->decimals = $typeInfo->decimals;
 			else
-				$token->decimals = 8;
+				$token->decimals = 9;
+			
+			// add the token type
+			if (isset($meta->type1))
+				$token->type = 'type1';
+			else if (isset($meta->nft1_group))
+				$token->type = 'nft1_group';
+			else if (isset($meta->nft1_child))
+				$token->type = 'nft1_child';
 			return;
 		}
 		$this->logError("Unable to find desired token metadata", $bchdTokenMetadata);

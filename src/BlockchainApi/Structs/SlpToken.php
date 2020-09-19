@@ -13,6 +13,8 @@ class SlpToken {
 	public $name = '';
 	/** @var string */
 	public $symbol = '';
+	/** @var string: type1|nft1_group|nft1_child */
+	public $type = 'type1';
 	/** @var string */
 	public $documentHash = '';
 	/** @var string */
