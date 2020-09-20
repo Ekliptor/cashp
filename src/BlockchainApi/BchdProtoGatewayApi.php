@@ -95,7 +95,7 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 		if ($response === false)
 			return null;
 		$jsonRes = json_decode($response);
-		if ($jsonRes === null) // empty object if address is unknown = valid response
+		if ($jsonRes === null || $response === '{}') // empty object if address is unknown = valid response
 			return null;
 		else if (isset($jsonRes->error) && $jsonRes->error) {
 			$this->logError("Error on receiving BCH address details", $jsonRes->error);
@@ -124,8 +124,8 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 		if ($response === false)
 			return null;
 		$jsonRes = json_decode($response);
-		if ($jsonRes === null) // empty object if address is unknown = valid response
-			return null;
+		if ($jsonRes === null || $response === '{}') 
+			return null; // empty object if address is unknown = valid response, check again later once a TX with this token happened
 		else if (isset($jsonRes->error) && $jsonRes->error) {
 			$this->logError("Error on receiving SLP address details", $jsonRes->error);
 			return null;
