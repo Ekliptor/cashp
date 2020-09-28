@@ -151,7 +151,7 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$slpAddress->balance += (int)$output->slp_token->amount;
 		}
 		if ($slpAddress->decimals > 0)
-			$slpAddress->balance /= $slpAddress->decimals;
+			$slpAddress->balance /= pow(10, $slpAddress->decimals);
 		$slpAddress->transactions = $this->getAddressTransactions($address);
 		
 		return $slpAddress;
