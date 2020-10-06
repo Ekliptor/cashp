@@ -229,7 +229,8 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			if (isset($typeInfo->decimals)) // not present with all tokens
 				$token->decimals = $typeInfo->decimals;
 			else
-				$token->decimals = 9;
+				//$token->decimals = 9;
+				throw new \Exception("SLP token must return number of decimals from BCHD - tokenID: $id");
 			
 			// add the token type
 			if (isset($meta->type1))
