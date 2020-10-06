@@ -64,10 +64,10 @@ class CurlHttpAgent extends AbstractHttpAgent {
 		 //curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 		 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
          curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                "cache-control: no-cache",
                 //"content-type: application/x-www-form-urlencoded"
                 'Content-Type: application/json',
-         		'accept: application/json'
+         		'Accept: application/json',
+         		'Cache-Control: no-cache,max-age=0'
             ));
 		$output = curl_exec($ch);
 		if (curl_errno($ch)) {

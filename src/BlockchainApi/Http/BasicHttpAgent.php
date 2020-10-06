@@ -30,7 +30,8 @@ class BasicHttpAgent extends AbstractHttpAgent {
 						//'content' => http_build_query($data),
 						'header' => implode("\r\n", array(
 								'accept: application/json',
-								'Content-Type: application/json'
+								'Content-Type: application/json',
+								'Cache-Control: no-cache,max-age=0'
 						)),
 						'content' => json_encode($data),
 						'timeout' => isset($options['timeout']) ? $options['timeout'] : $this->timeoutSec,

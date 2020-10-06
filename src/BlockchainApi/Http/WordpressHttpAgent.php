@@ -49,7 +49,9 @@ class WordpressHttpAgent extends AbstractHttpAgent {
 				'user-agent' => isset($options['userAgent']) ? $options['userAgent'] : $this->userAgent,
 				'redirection' => isset($options['maxRedirects']) ? $options['maxRedirects'] : $this->maxRedirects,
 				'headers' => array(
+					'Content-Type' => 'application/json',
 					'Accept' => 'application/json',
+					'Cache-Control' => 'no-cache,max-age=0',
 				),
 			);
 	}
