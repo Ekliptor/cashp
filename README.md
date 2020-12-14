@@ -94,6 +94,24 @@ returns `bool` - True if the address is valid, false otherwise.
 
 ---
 
+##### getReturnAddress(Transaction $tx): string
+Gets the return BCH address (belonging to the sender senders address) defined
+as the last address in transaction outputs.
+* `Transaction $tx` - The transaction from getTransaction() call.
+
+returns `string` - the address
+
+---
+
+##### getReturnSlpAddress(Transaction $tx): string
+Gets the return SLP address (belonging to the sender senders address) defined
+as the last address in transaction outputs.
+* `Transaction $tx` - The transaction from getTransaction() call.
+
+returns `string` - the address
+
+---
+
 
 #### CashpOptions class
 A set of advanced config properties.
@@ -186,6 +204,14 @@ Return the SLP token details of a given address include balance, TXIDs,...
 * `string $tokenID` - 
 
 returns `SlpTokenAddress` - The token or `null` on failure
+
+---
+
+##### getTransaction(string $transactionID): ?Transaction
+Returns a transaction with all inputs and outputs including SLP data.
+* `string $transactionID` -
+
+returns `Transaction` - The transaction or `null` on failure
 
 ---
 

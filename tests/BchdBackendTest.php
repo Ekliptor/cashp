@@ -69,6 +69,30 @@ final class BchdBackendTest extends TestCase {
 		$this->assertInstanceOf(BchAddress::class, $address, "BCH address creation failed");
 	}
 	
+	public function testGetTransaction(): void {
+		$cashp = $this->getCashpForTesting();
+		$txHash = 'ca87043999ad7c441193ced336577b4ba50fc7a45fbaf6c0bbda825cc42d7fc5';
+		$tx = $cashp->getBlockchain()->getTransaction($txHash);
+		if (count($tx->outputs) !== 2)
+			$this->fail("expected 2 outputs in TX $txHash");
+		$this->assertEquals(5027, $tx->outputs[1]->value, "TX $txHash output has wrong value");
+		
+		$returnAddress = $cashp->getReturnAddress($tx);
+		$this->assertEquals('bitcoincash:qpwk4x4pz7xd5mxg7w40v95vhjk2qcuawsmusryd7y', $returnAddress, 'wrong BCH return address');
+	}
+	
+	public function testGetSlpTransaction(): void {
+		$cashp = $this->getCashpForTesting();
+		$txHash = '1407222af22676f9706847b629d26350eb118c8763875a656abbc3f5df786d18';
+		$tx = $cashp->getBlockchain()->getTransaction($txHash);
+		if (count($tx->outputs) !== 4)
+			$this->fail("expected 4 outputs in TX $txHash");
+		$this->assertEquals(806745, $tx->outputs[3]->value, "TX $txHash output has wrong value");
+		
+		$returnAddress = $cashp->getReturnSlpAddress($tx);
+		$this->assertEquals('simpleledger:qzapwgc088xj9hf8pcsrzsey8j7svcqysyp9ygxmq8', $returnAddress, 'wrong SLP return address');
+	}
+	
 	protected function getCashpForTesting(): CashP {
 		$opts = new CashpOptions();
 		$opts->blockchainApiImplementation = 'BchdProtoGatewayApi';

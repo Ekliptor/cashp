@@ -27,7 +27,6 @@ class WordpressHttpAgent extends AbstractHttpAgent {
 	
 	public function post(string $url, array $data = array(), array $options = array()) {
 		$wpOptions = $this->getHttpOptions($options);
-		$wpOptions['headers']['Content-Type'] = 'application/json';
 		$wpOptions['body'] = json_encode($data);
 		$response = wp_remote_post($url, $wpOptions);
 		if ($response instanceof \WP_Error) {

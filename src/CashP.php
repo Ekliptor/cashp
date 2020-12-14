@@ -2,6 +2,7 @@
 namespace Ekliptor\CashP;
 
 use Ekliptor\CashP\BlockchainApi\Http\BasicHttpAgent;
+use Ekliptor\CashP\BlockchainApi\Structs\Transaction;
 use Ekliptor\CashP\BlockchainApi\AbstractBlockchainApi;
 
 
@@ -202,6 +203,40 @@ class CashP {
 		if (count($addressParts) !== 2)
 			return false;
 		return preg_match("/^[a-z0-9]+$/", $addressParts[1]) === 1;
+	}
+	
+	/**
+	 * Gets the return BCH address (belonging to the sender senders address) defined
+	 * as the last address in transaction outputs.
+	 * @param Transaction $tx
+	 * @return string
+	 */
+	public function getReturnAddress(Transaction $tx): string {
+		$len = count($tx->outputs);
+		for ($i = $len-1; $i >= 0; $i--) {
+			$out = $tx->outputs[$i];
+			if (!empty($out->address))
+				return $out->address;
+		}
+		return '';
+	}
+	
+	/**
+	 * Gets the return SLP address (belonging to the sender senders address) defined
+	 * as the last address in transaction outputs.
+	 * @param Transaction $tx
+	 * @return string
+	 */
+	public function getReturnSlpAddress(Transaction $tx): string {
+		$len = count($tx->outputs);
+		for ($i = $len-1; $i >= 0; $i--) {
+			$out = $tx->outputs[$i];
+			if (empty($out->slp))
+				continue;
+			if (!empty($out->slp->address))
+				return $out->slp->address;
+		}
+		return '';
 	}
 	
 	/**

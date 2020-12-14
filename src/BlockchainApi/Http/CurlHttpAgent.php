@@ -24,6 +24,12 @@ class CurlHttpAgent extends AbstractHttpAgent {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_MAXREDIRS, $maxRedirects);
 		}
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                //"content-type: application/x-www-form-urlencoded"
+                'Content-Type: application/json',
+         		'Accept: application/json',
+         		'Cache-Control: no-cache,max-age=0'
+            ));
 		/*
 		if ($skip_certificate_check) {
 			curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, false);

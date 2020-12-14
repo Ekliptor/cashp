@@ -4,6 +4,7 @@ namespace Ekliptor\CashP\BlockchainApi;
 use Ekliptor\CashP\BlockchainApi\Structs\BchAddress;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpToken;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpTokenAddress;
+use Ekliptor\CashP\BlockchainApi\Structs\Transaction;
 
 class BitcoinComRestApi extends AbstractBlockchainApi {
 	
@@ -101,6 +102,10 @@ class BitcoinComRestApi extends AbstractBlockchainApi {
 			return null;
 		$slpToken = SlpTokenAddress::fromAddressJson($jsonRes, new SlpTokenAddress($address), $tokenID);
 		return $slpToken;
+	}
+	
+	public function getTransaction(string $transactionID): ?Transaction {
+		throw new \Exception("getTransaction() is not yet implemented on " . get_class($this)); // TODO
 	}
 	
 	protected function getTransactionDetails(string $transactionID): ?\stdClass {

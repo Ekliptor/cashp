@@ -5,6 +5,11 @@ use Ekliptor\CashP\CashP;
 use Ekliptor\CashP\BlockchainApi\Structs\BchAddress;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpToken;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpTokenAddress;
+use Ekliptor\CashP\BlockchainApi\Structs\Transaction;
+use Ekliptor\CashP\BlockchainApi\Structs\TransactionInput;
+use Ekliptor\CashP\BlockchainApi\Structs\TransactionBaseData;
+use Ekliptor\CashP\BlockchainApi\Structs\TransactionOutput;
+use Ekliptor\CashP\BlockchainApi\Structs\SlpTransactionData;
 
 class BchdProtoGatewayApi extends AbstractBlockchainApi {
 	
@@ -157,6 +162,39 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 		return $slpAddress;
 	}
 	
+	public function getTransaction(string $transactionID): ?Transaction {
+		$tx = $this->getTransactionDetails($transactionID);
+		if (empty($tx) || !isset($tx->transaction) || (isset($tx->error) && !empty($tx->error)))
+			return null;
+		
+		$txID = bin2hex(base64_decode($tx->transaction->hash));
+		$transaction = new Transaction($txID);
+		foreach ($tx->transaction->inputs as $in) {
+			$input = new TransactionInput();
+			if (isset($in->index)) // not present on index == 0
+				$input->index = $in->index;
+			$input->value = intval($in->value);
+			$input->address = 'bitcoincash:' . $in->address;
+			if (isset($in->slp_token))
+				$this->addSlpTransactionData($input, $in->slp_token);
+			$transaction->inputs[] = $input;
+		}
+		foreach ($tx->transaction->outputs as $out) {
+			$output = new TransactionOutput();
+			if (isset($out->index)) // not present on index == 0
+				$output->index = $out->index;
+			if (isset($out->value)) // missing on OP_RETURN outputs (value 0)
+				$output->value = intval($out->value);
+			if (isset($out->address)) // missing on OP_RETURN outputs (value 0)
+				$output->address = 'bitcoincash:' . $out->address;
+			if (isset($out->slp_token))
+				$this->addSlpTransactionData($output, $out->slp_token);
+			$transaction->outputs[] = $output;
+		}
+		
+		return $transaction;
+	}
+	
 	protected function getTransactionDetails(string $transactionID): ?\stdClass {
 		$transactionID = static::ensureBase64Encoding($transactionID);
 		if (isset($this->transactionCache[$transactionID]))
@@ -242,6 +280,19 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			return;
 		}
 		$this->logError("Unable to find desired token metadata", $bchdTokenMetadata);
+	}
+	
+	protected function addSlpTransactionData(TransactionBaseData $tx, \stdClass $rawSlpData): void {
+		if (empty($rawSlpData))
+			return;
+		
+		$tx->slp = new SlpTransactionData();
+		$tx->slp->tokenID = bin2hex(base64_decode($rawSlpData->token_id));
+		$tx->slp->amount = intval($rawSlpData->amount);
+		if (isset($rawSlpData->address)) // not present on inputs
+			$tx->slp->address = 'simpleledger:' . $rawSlpData->address;
+		if (isset($rawSlpData->decimals)) // not present on inputs
+			$tx->slp->decimals = intval($rawSlpData->decimals);
 	}
 	
 	protected static function ensureBase64Encoding(string $hash, bool $reverseBytes = true): string {

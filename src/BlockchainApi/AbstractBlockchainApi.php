@@ -5,6 +5,7 @@ use Ekliptor\CashP\BlockchainApi\Structs\BchAddress;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpToken;
 use Ekliptor\CashP\BlockchainApi\Structs\SlpTokenAddress;
 use Ekliptor\CashP\BlockchainApi\Http\AbstractHttpAgent;
+use Ekliptor\CashP\BlockchainApi\Structs\Transaction;
 
 class BlockchainException extends \Exception {
 	public function __construct($message = null, $code = null, $previous = null) {
@@ -132,6 +133,13 @@ abstract class AbstractBlockchainApi {
 	 * @return SlpTokenAddress|NULL
 	 */
 	public abstract function getSlpAddressDetails(string $address, string $tokenID): ?SlpTokenAddress;
+	
+	/**
+	 * Returns a transaction with all inputs and outputs including SLP data.
+	 * @param string $transactionID
+	 * @return Transaction|NULL
+	 */
+	public abstract function getTransaction(string $transactionID): ?Transaction;
 	
 	/**
 	 * Creates a new addresses from the xPub repeatedly by incrementing $addressCount in $hdPathFormat until it finds an address with an empty balance (not used by another wallet).
