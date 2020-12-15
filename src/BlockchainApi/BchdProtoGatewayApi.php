@@ -185,7 +185,7 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 				$output->index = $out->index;
 			if (isset($out->value)) // missing on OP_RETURN outputs (value 0)
 				$output->value = intval($out->value);
-			if (isset($out->address)) // missing on OP_RETURN outputs (value 0)
+			if (isset($out->address) && !empty($out->address)) // missing on OP_RETURN outputs (value 0)
 				$output->address = 'bitcoincash:' . $out->address;
 			if (isset($out->slp_token))
 				$this->addSlpTransactionData($output, $out->slp_token);
@@ -283,13 +283,13 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 	}
 	
 	protected function addSlpTransactionData(TransactionBaseData $tx, \stdClass $rawSlpData): void {
-		if (empty($rawSlpData))
+		if (empty($rawSlpData || empty($rawSlpData->token_id)))
 			return;
 		
 		$tx->slp = new SlpTransactionData();
 		$tx->slp->tokenID = bin2hex(base64_decode($rawSlpData->token_id));
 		$tx->slp->amount = intval($rawSlpData->amount);
-		if (isset($rawSlpData->address)) // not present on inputs
+		if (isset($rawSlpData->address) && !empty($rawSlpData->address)) // not present on inputs
 			$tx->slp->address = 'simpleledger:' . $rawSlpData->address;
 		if (isset($rawSlpData->decimals)) // not present on inputs
 			$tx->slp->decimals = intval($rawSlpData->decimals);
