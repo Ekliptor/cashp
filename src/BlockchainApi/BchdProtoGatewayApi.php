@@ -111,7 +111,9 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			return $bchAddress;
 		
 		foreach ($jsonRes->outputs as $output) {
-			$bchAddress->balanceSat += (int)$output->value;
+			$curSats = (int)$output->value;
+			if ($curSats > CashP::DUST_LIMIT)
+				$bchAddress->balanceSat += $curSats;
 		}
 		$bchAddress->balance = CashP::fromSatoshis($bchAddress->balanceSat);
 		$bchAddress->transactions = $this->getAddressTransactions($address);
@@ -135,7 +137,11 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$this->logError("Error on receiving SLP address details", $jsonRes->error);
 			return null;
 		}
-		else if (!isset($jsonRes->token_metadata) || empty($jsonRes->token_metadata)) {
+		if (empty($jsonRes->outputs)) {
+			// on an address with 0 transactions token_meta on GetAddressUnspentOutputs is empty. we call GetTokenMetadata explicitly
+			$jsonRes->token_metadata = $this->getTokenMetadataRaw($tokenID);
+		}
+		if (!isset($jsonRes->token_metadata) || empty($jsonRes->token_metadata)) {
 			$this->logError("Missing token metadata on SLP address details", $jsonRes);
 			return null;
 		}
@@ -213,6 +219,25 @@ class BchdProtoGatewayApi extends AbstractBlockchainApi {
 			$this->transactionCache[$transactionID] = $jsonRes;
 		// {"error":"transaction not found","code":5,"message":"transaction not found"}
 		return $jsonRes;
+	}
+	
+	protected function getTokenMetadataRaw(string $tokenID): array {
+		$tokenIDBase64 = static::ensureBase64Encoding($tokenID, false);
+		$url = $this->blockchainApiUrl . 'GetTokenMetadata';
+		$data = array(
+				'token_ids' => array($tokenIDBase64),
+		);
+		$response = $this->httpAgent->post($url, $data);
+		if ($response === false)
+			return array();
+		$jsonRes = json_decode($response);
+		if ($jsonRes === null)
+			return array();
+		else if (isset($jsonRes->error) && $jsonRes->error === true)
+			return array();
+		else if (empty($jsonRes->token_metadata))
+			return array();
+		return  $jsonRes->token_metadata; // array with 1 element
 	}
 	
 	protected function getAddressTransactions(string $address, $confirmedOnly = false): array {

@@ -12,6 +12,7 @@ use Ekliptor\CashP\BlockchainApi\AbstractBlockchainApi;
  */
 class CashP {
 	const BADGER_LIB_URL = "https://badgerwallet.cash/button.js";
+	const DUST_LIMIT = 546;
 	
 	/** @var CashP */
 	//private static $instance = null;
@@ -206,7 +207,7 @@ class CashP {
 	}
 	
 	/**
-	 * Gets the return BCH address (belonging to the sender senders address) defined
+	 * Gets the return BCH address (belonging to the sender) defined
 	 * as the last address in transaction outputs.
 	 * @param Transaction $tx
 	 * @return string
@@ -222,7 +223,7 @@ class CashP {
 	}
 	
 	/**
-	 * Gets the return SLP address (belonging to the sender senders address) defined
+	 * Gets the return SLP address (belonging to the sender) defined
 	 * as the last address in transaction outputs.
 	 * @param Transaction $tx
 	 * @return string

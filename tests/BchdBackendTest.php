@@ -93,6 +93,17 @@ final class BchdBackendTest extends TestCase {
 		$this->assertEquals('simpleledger:qzapwgc088xj9hf8pcsrzsey8j7svcqysyp9ygxmq8', $returnAddress, 'wrong SLP return address');
 	}
 	
+	public function testGetTokenMetadata(): void {
+		$cashp = $this->getCashpForTesting();
+		
+		// on an address with 0 transactions token_meta on GetAddressUnspentOutputs is empty. call GetTokenMetadata explicitly
+		$slpAddress = 'simpleledger:qpfdgdftjj43f9fhzm2k4ysrcuwlae2l3vd4pvmhy7';
+		$tokenID = 'c4b0d62156b3fa5c8f3436079b5394f7edc1bef5dc1cd2f9d0c4d46f82cca479';
+		$address = $cashp->getBlockchain()->getSlpAddressDetails($slpAddress, $tokenID);
+		$this->assertEquals('c4b0d62156b3fa5c8f3436079b5394f7edc1bef5dc1cd2f9d0c4d46f82cca479', $address->id, 'invalid token ID returned from API');
+		$this->assertEmpty($address->transactions, 'SLP ddress already has transactions. GetTokenMeta function not called.');
+	}
+	
 	protected function getCashpForTesting(): CashP {
 		$opts = new CashpOptions();
 		$opts->blockchainApiImplementation = 'BchdProtoGatewayApi';
