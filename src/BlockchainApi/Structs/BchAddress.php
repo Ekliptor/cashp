@@ -41,6 +41,8 @@ class BchAddress {
 			$cashAddress = 'bitcoincash:' . $cashAddress;
 		$this->cashAddress = $cashAddress;
 		$this->legacyAddress = $legacyAddress;
+		if (substr($slpAddress, 0, 13) !== 'simpleledger:')
+			$slpAddress = 'simpleledger:' . $slpAddress;
 		$this->slpAddress = $slpAddress;
 	}
 	
